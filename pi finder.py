@@ -15,8 +15,9 @@ import numpy as np
 import random as rnd
 totalcount=0
 circlecount=0
+N=1000000
 
-while totalcount <1000000:
+while totalcount <N:
     x=rnd.uniform(-1,1)
     y=rnd.uniform(-1,1)
     r=np.sqrt(x**2+y**2) #gives wether the point is within the circle
@@ -26,4 +27,10 @@ while totalcount <1000000:
     #print(totalcount/10000)
 
 area = 4*(circlecount/totalcount) #gives the area of the square multiplied by the ratio of circle points to non-circle points
-print(area)
+
+uncertainty_estimate = 1/np.sqrt(N)
+print(area, "+/-", uncertainty_estimate)
+
+#volume of n sphere = V_n(R)= (pi**n/2/((n/2 + 1)-1)!)*R**n
+#surface area of a n sphere = (n/R)*V_n(R)
+#n dimensions, R radius, 
