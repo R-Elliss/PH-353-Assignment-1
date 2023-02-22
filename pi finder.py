@@ -15,22 +15,56 @@ import numpy as np
 import random as rnd
 totalcount=0
 circlecount=0
-N=1000000
+N=1000000   #number of random numbers 
 
 while totalcount <N:
-    x=rnd.uniform(-1,1)
-    y=rnd.uniform(-1,1)
-    r=np.sqrt(x**2+y**2) #gives wether the point is within the circle
-    if r <=1:
-        circlecount +=1 #adds a point to within the circle
-    totalcount+=1 #adds a point within the square
+    x=rnd.uniform(-1, 1)
+    y=rnd.uniform(-1, 1)
+    r=np.sqrt(x**2 + y**2) #gives wether the point is within the circle
+    if r <= 1:
+        circlecount += 1 #adds a point to within the circle
+    totalcount += 1 #adds a point within the square
     #print(totalcount/10000)
 
 area = 4*(circlecount/totalcount) #gives the area of the square multiplied by the ratio of circle points to non-circle points
 
 uncertainty_estimate = 1/np.sqrt(N)
-print(area, "+/-", uncertainty_estimate)
+#print(area, "+/-", uncertainty_estimate)
 
-#volume of n sphere = V_n(R)= (pi**n/2/((n/2 + 1)-1)!)*R**n
-#surface area of a n sphere = (n/R)*V_n(R)
-#n dimensions, R radius, 
+# n-dimensional sphere volume/surface area calculations
+n = 5    # number of dimensions
+R = 1
+
+#Recurively calculating Vn(R)
+def recursive_V(n):  #works for any d > 0
+    if n == 0:
+        return 1   #0D case
+    elif n == 1:
+        return 2*R   #1D case
+    else:
+        return (2*np.pi/n * R**2 * recursive_V(n-2))   #equation taken from 2d recurrance relation on wikipedia page for volume of an n ball
+        
+s_Area = (n/R)*recursive_V(n)  #Surface area of n-d sphere 
+
+totalcount1=0
+circlecount1=0
+
+while totalcount1 < N:
+    pos_R = np.ones((n,1), dtype='float')
+    total = 0 
+    for i in range(n):
+        pos_R[i-1] = [rnd.uniform(-1,1)]   #creating an array with n random numbers stored
+        total += pos_R[i-1]**2
+    r = np.sqrt(total) #square rooting over the sum of all random numbers squared
+    if r <= 1:
+        circlecount1 += 1
+    totalcount1 += 1
+
+#used for calculating the area of the n-dimensional box
+def double(n):  #returns 2x the last value of n. i.e. n = 2 give 4, n = 3 gives 8 
+    if n == 0:
+        return 1
+    else:
+        return 2*double(n-1)
+    
+n_area = double(n)*(circlecount1/totalcount1)   #area of box multiplied by the ratio of points in the sphere vs outside
