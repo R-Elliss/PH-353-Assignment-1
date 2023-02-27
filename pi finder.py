@@ -21,19 +21,20 @@ while totalcount <N:
     totalcount += 1 #adds a point within the square
     #print(totalcount/10000)
 area = 4*(circlecount/totalcount) #gives the area of the square multiplied by the ratio of circle points to non-circle points
+sqrt(1/(N(N-1))*sum((rnd.uniform - mean)^2))=uncertainty/error
 """
 import numpy as np
 import random as rnd
-N=1000000   #number of random numbers
+N=10000   #number of random numbers
 totalcount=0
 circlecount=0
- 
+meantot=0
 uncertainty_estimate = 1/np.sqrt(N)   #estimate of the uncertainty in V, proper calculation might be needed for consistent results
 
 # n-dimensional sphere volume/surface area calculations
-n = 2    # number of dimensions
+n = 3    # number of dimensions
 R = 1    # radius
-
+sigmarr=np.zeros((n,1), dtype='float') #array used in error
 #Recurively calculating Vn(R)
 def recursive_V(n, R):  #works for any d > 0
     if n == 0:
@@ -43,12 +44,6 @@ def recursive_V(n, R):  #works for any d > 0
     else:
         return (2*np.pi/n * R**2 * recursive_V(n-2, R))   #equation taken from 2d recurrance relation on wikipedia page for volume of an n ball
     
-#used for calculating the area of the n-dimensional box
-def double(n):  #returns 2x the last value of n. i.e. n = 2 give 4, n = 3 gives 8 
-    if n == 0:
-        return 1
-    else:
-        return 2*double(n-1)
         
 s_Area = (n/R)*recursive_V(n, R)  #Surface area of n-d sphere, this is currently being used not entirely sure if we need it or not
 
@@ -56,12 +51,19 @@ while totalcount < N:
     pos_R = np.ones((n, 1), dtype='float')
     total = 0 
     for i in range(n):
-        pos_R[i-1] = [rnd.uniform(-1, 1)]   #creating an array with n random numbers stored
+        pos_R[i-1] = [rnd.uniform(-R, R)]   #creating an array with n random numbers stored
         total += float(pos_R[i-1]**2)
+        sigmarr=np.append(sigmarr,np.sqrt(sum(pos_R[i-1]**2)))
+        
+    
     r = np.sqrt(total) #square rooting over the sum of all random numbers squared
-    if r <= 1:
+    if r <= R:
         circlecount += 1
     totalcount += 1
+mean=sum(sigmarr)/N
+for i in range(N):
+    meantot += (sigmarr[i+n]-mean)**2
+error = np.sqrt(1/(N*(N-1))*meantot)
     
-n_area = double(n)*(circlecount/totalcount)   #area of box multiplied by the ratio of points in the sphere vs outside
-print(n_area, "+/-", uncertainty_estimate, "value obtained via monte-carlo integration, compared to the actual value of", recursive_V(n, R))
+n_area = ((2*R)**n)*(circlecount/totalcount)   #area of box multiplied by the ratio of points in the sphere vs outside
+print(n_area, "+/-", error, "value obtained via monte-carlo integration, compared to the actual value of", recursive_V(n, R))
