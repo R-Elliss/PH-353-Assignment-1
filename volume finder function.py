@@ -2,20 +2,30 @@ import numpy as np
 
 def assignment():
     #1) 
-    results_1 = []
+    results_1 = np.zeros((10,3), dtype='float')
     for D in range(1,11):
-        results_1.append(Volume(1,D))
-        #print(results_1)
-        
+        temp = np.array_split(Volume(1,D),2)
+        results_1[D-1,:] = [D,temp[0],temp[1]]
+        print(results_1)
+    
+    #np.savetxt("D data.txt", results_1)
+    '''    #unable to get this to work for now will try again soon but the need 
+    # for this to be an arange is causing problems when trying to reslice the arrays back into 1 array
+    #1 possible solution for this is to avoid using floats casting the loop and 
+    # instead just doing 2r then doing 2r/2 where needed but this doesn't quite feel right although could be done as a last resort
+    
     #2)
-    results_2 = []
+    results_2 = np.empty((9,3), dtype='float')
     for r in np.arange(1,5.5,0.5):
-        results_2.append(Volume(r,3))
-        
-    return results_1, results_2
+        results_2[r-1,:] = np.concatenate((results_2, np.array_split(Volume(r,3),2)),axis=1)
+        #temp = np.array_split(Volume(r,3),2)   #splits output of Volume into 2 arrays, 1 for volume the other for error
+        #results_2[r-1,:] = np.array([r,temp[0],temp[1]])
+        print(results_2)
+    '''    
+    return results_1, #results_2
 
 def Volume(r,D):
-    N = 1000000 # this is incredibly accurate for N = 10,000,000 but it takes like 3 mins to run for 2d 
+    N = 100000 # this is incredibly accurate for N = 10,000,000 but it takes like 3 mins to run for 2d 
     
     def trueV(r,D):  #works for any d > 0
         if D == 0:
