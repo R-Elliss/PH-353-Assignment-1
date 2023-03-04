@@ -73,4 +73,6 @@ def assignment():
         radarr[i,0]=(i+1)/2
         radarr[i,1]=Volume(((i+1)/2),3)[0]
         radarr[i,2]=Volume(((i+1)/2),3)[1]
+    np.savetxt("dimensions1to10.txt",dimarr)
+    np.savetxt("radii1to5.txt",radarr)
     return dimarr,radarr
