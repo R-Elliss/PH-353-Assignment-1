@@ -1,6 +1,6 @@
 import numpy as np
 
-def assignment():
+def assignmentest():
     #1) 
     results_1 = np.zeros((10,3), dtype='float')
     for D in range(1,11):
@@ -24,8 +24,10 @@ def assignment():
     '''    
     return results_1, #results_2
 
+
+
 def Volume(r,D):
-    N = 100000 # this is incredibly accurate for N = 10,000,000 but it takes like 3 mins to run for 2d 
+    N = 10000 # this is incredibly accurate for N = 10,000,000 but it takes like 3 mins to run for 2d 
     
     def trueV(r,D):  #works for any d > 0
         if D == 0:
@@ -49,12 +51,26 @@ def Volume(r,D):
             if xi[totalcount] <= r:
                 circlecount +=1
             totalcount += 1
-        vol=circlecount/totalcount * (2*r)**D            
-        return vol
+        vol=circlecount/totalcount * (2*r)**D
+        error = float(np.sqrt((1/(N*(N-1)))*sum((xi - vol)**2)))#folded the error function into the main finder and used the array of variables used for finding the volume            
+        return vol,error #print("volume =",vol,"+/-",error)
     
-    def volerr(r,D,N):
-        error = np.sqrt((1/(N*(N-1)))*sum((ranradii(r,D,N) - volfind(r,D,N))**2))
-        return float(error)
+    #def volerr(r,D,N):
+        #error = np.sqrt((1/(N*(N-1)))*sum((ranradii(r,D,N) - volfind(r,D,N))**2))
+        #return float(error)
 
-    return [volfind(r,D,N), volerr(r,D,N)]
+    return volfind(r,D,N)
     #print("for a sphere in",D,"dimesnions, with radius",r,", volume =",volfind(r,D,N),"+/-",volerr(r,D,N),"compared to the real value of,",trueV(r,D))
+
+
+def assignment():
+    dimarr=np.zeros([10,3])
+    radarr=np.zeros([10,3])
+    for i in range(10):
+        dimarr[i,0]=i+1
+        dimarr[i,1]=Volume(1,i+1)[0]
+        dimarr[i,2]=Volume(1,i+1)[1]
+        radarr[i,0]=(i+1)/2
+        radarr[i,1]=Volume(((i+1)/2),3)[0]
+        radarr[i,2]=Volume(((i+1)/2),3)[1]
+    return dimarr,radarr
