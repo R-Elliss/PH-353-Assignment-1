@@ -16,7 +16,7 @@ radii=np.loadtxt("radii1to5.txt",delimiter=' ')
 
 #plt.errorbar(radii[:,0],radii[:,1],yerr=radii[:,2],ecolor='red',elinewidth=2,linestyle='none')
 
-with PdfPages('dimmmmmmmmmm.pdf') as export_pdf:
+with PdfPages('volume plots for varied radius and dimensions.pdf') as export_pdf:
     plt.subplot(1,2,1)
     plt.errorbar(radii[:,0],radii[:,1],yerr=radii[:,2],ecolor='red',elinewidth=2, capsize=1)#,linestyle='none')
     plt.title('radii plot')
