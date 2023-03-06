@@ -1,16 +1,19 @@
 import numpy as np
 
-def Volume(r,D):
-    N = 1000 # this is incredibly accurate for N = 10,000,000 but it takes like 3 mins to run for 2d 
-    
-    def trueV(r,D):  #works for any d > 0
+"""
+A test case, using a recursive function to output a highly accurate volume for any generalised radius and dimension of sphere
+def trueV(r,D):  #works for any d > 0
         if D == 0:
             return 1   #0D case
         elif D == 1:
             return 2*r   #1D case
         else:
             return (2*np.pi/D * r**2 * trueV(r, D-2))
+"""
 
+def Volume(r,D):
+    N = 100000 # this is incredibly accurate for N = 10,000,000 but it takes like 3 mins to run for 2d 
+    
     def ranradii(r,D,N):
         arr=np.zeros([N,1])
         for i in range(N):
@@ -26,23 +29,28 @@ def Volume(r,D):
                 circlecount +=1
             totalcount += 1
         vol=circlecount/totalcount * (2*r)**D
-        #error = float(np.sqrt((1/(N*(N-1)))*sum((xi - vol)**2)))#folded the error function into the main finder and used the array of variables used for finding the volume            
-        error = np.sqrt((1/(N*(N-1)))*np.abs(sum(xi - (1/N*sum(xi)**2))))
-        return vol,error #print("volume =",vol,"+/-",error)
+        return vol
     
-
     return volfind(r,D,N)
+
+def uncertainty(r,D,N):
+    uncarr=np.zeros([N])
+    for i in range(N):
+        uncarr[i]=Volume(r,D)
+    mean=sum(uncarr)/N
+    error=np.sqrt((1/(N*(N-1)))*sum((uncarr-mean)**2))
+    return error
 
 def assignment():
     dimarr=np.zeros([10,3])
     radarr=np.zeros([10,3])
     for i in range(10):
         dimarr[i,0]=i+1
-        dimarr[i,1]=Volume(1,i+1)[0]
-        dimarr[i,2]=Volume(1,i+1)[1]
+        dimarr[i,1]=Volume(1,i+1)
+        dimarr[i,2]=uncertainty(1,i+1,10)
         radarr[i,0]=(i+1)/2
-        radarr[i,1]=Volume(((i+1)/2),3)[0]
-        radarr[i,2]=Volume(((i+1)/2),3)[1]
+        radarr[i,1]=Volume(((i+1)/2),3)
+        radarr[i,2]=uncertainty(((i+1)/2),3,10)
     np.savetxt("dimensions1to10.txt",dimarr)
     np.savetxt("radii1to5.txt",radarr)
     return dimarr,radarr
