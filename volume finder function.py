@@ -22,13 +22,13 @@ def Volume(r,D):
 
     def volfind(r,D,N):
         xi=ranradii(r,D,N)   
-        totalcount=0
+        count=0
         circlecount=0
-        while totalcount < N:
-            if xi[totalcount] <= r:
+        while count < N:
+            if xi[count] <= r:
                 circlecount +=1
-            totalcount += 1
-        vol=circlecount/totalcount * (2*r)**D
+            count += 1
+        vol=circlecount/count * (2*r)**D
         return vol
     
     return volfind(r,D,N)

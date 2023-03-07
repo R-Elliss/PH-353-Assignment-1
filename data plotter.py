@@ -7,15 +7,6 @@ dimensions=np.loadtxt("dimensions1to10.txt",delimiter=' ')
 radii=np.loadtxt("radii1to5.txt",delimiter=' ')
 
 
-#plt.plot(dimensions[:,0],dimensions[:,1])
-#plt.errorbar(radii[:,0],radii[:,1],yerr=radii[:,2],ecolor='red',elinewidth=2,linestyle='none')
-
-#plt.errorbar(dimensions[:,0],dimensions[:,1],yerr=dimensions[:,2],ecolor='red',elinewidth=2,linestyle='none')
-
-#plt.figure()
-
-#plt.errorbar(radii[:,0],radii[:,1],yerr=radii[:,2],ecolor='red',elinewidth=2,linestyle='none')
-
 with PdfPages('volume plots for varied radius and dimensions.pdf') as export_pdf:
     plt.subplot(1,2,1)
     plt.errorbar(radii[:,0],radii[:,1],yerr=radii[:,2],ecolor='red',elinewidth=2, capsize=3,marker='o',markersize=2,linestyle='none')
